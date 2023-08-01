@@ -24,6 +24,11 @@ RUN docker-php-ext-install \
     docker-php-ext-configure gd && \
     docker-php-ext-install gd
 
+
+RUN apk add --no-cache $PHPIZE_DEPS \
+    && pecl install xdebug-3.1.5 \
+    && docker-php-ext-enable xdebug
+
 COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
 
 RUN addgroup -g 1000 -S www && \

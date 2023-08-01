@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 networks:
   messenger:
@@ -24,7 +24,10 @@ services:
       dockerfile: ./docker/api/Dockerfile
     container_name: api
     volumes:
+      - ./docker/api/xdebug/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - api_data:/var/www/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - messenger
 
