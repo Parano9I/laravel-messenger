@@ -1,0 +1,55 @@
+version: '3.3'
+
+networks:
+  messenger:
+    driver: bridge
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    restart: always
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - messenger
+
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/api/Dockerfile
+    container_name: api
+    volumes:
+      - api_data:/var/www/
+    networks:
+      - messenger
+
+  mysql:
+    image: mysql:8.0.32
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    user: '1000:1000'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: 'messenger'
+      MYSQL_PASSWORD: 'root'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - messenger
+
+volumes:
+  api_data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './api'
+  mysql_data:
