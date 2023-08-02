@@ -6,11 +6,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * @property int $id
+     * @property string $name
+     * @property string $email
+     * @property string $password
+     * @property string $avatar
+     * @property string $remember_token
+     * @property Carbon|null $created_at
+     * @property Carbon|null $updated_at
+     */
+
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +34,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar'
     ];
 
     /**
@@ -40,6 +54,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'password'          => 'hashed',
     ];
 }
