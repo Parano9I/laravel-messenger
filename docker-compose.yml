@@ -13,8 +13,12 @@ services:
     container_name: nginx
     ports:
       - "80:80"
+      - "3001:3001"
     volumes:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - frontend
+      - api
     networks:
       - messenger
 
@@ -28,8 +32,24 @@ services:
       - api_data:/var/www/
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      - mysql
     networks:
       - messenger
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    container_name: frontend
+    restart: unless-stopped
+    user: '1000:1000'
+    volumes:
+      - frontend_data:/var/www
+#      - /var/www/node_modules/
+    networks:
+      - messenger
+
 
   mysql:
     image: mysql:8.0.32
@@ -55,4 +75,10 @@ volumes:
       type: 'none'
       o: 'bind'
       device: './api'
+  frontend_data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './frontend'
   mysql_data:
