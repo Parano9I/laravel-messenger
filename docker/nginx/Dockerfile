@@ -28,5 +28,5 @@ RUN cd nginx-1.23.3 && \
 RUN rm -rf /usr/src/* && \
     apk del .build-deps
 
-EXPOSE 80
+EXPOSE 80 3001
 CMD ["nginx", "-g", "daemon off;"]
